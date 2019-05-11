@@ -35,7 +35,10 @@
 <div class="container">
 
   <button mat-raised-button color="primary" (click)="exportAsXLSX()">
-  Export <mat-icon>trending_down</mat-icon></button>
+    Export <mat-icon>trending_down</mat-icon>
+  </button>
   &nbsp;
-  <button mat-raised-button color="accent">Accent</button>
+  <button mat-raised-button color="accent" (click)="exportAsXLSXFiltered()">
+    <mat-icon>trending_down</mat-icon>Filtered
+  </button>
 </div>

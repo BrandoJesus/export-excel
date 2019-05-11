@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {MatTableDataSource} from '@angular/material';
+import { ExporterService } from 'src/app/services/exporter.service';
 
 export interface PeriodicElement {
   name: string;
@@ -27,14 +28,22 @@ const ELEMENT_DATA: PeriodicElement[] = [
   styleUrls: ['./data-table.component.css']
 })
 export class DataTableComponent implements OnInit {
+  displayedColumns: string[] = ['position', 'name', 'weight', 'symbol'];
+  dataSource = new MatTableDataSource(ELEMENT_DATA);
 
-  constructor() { }
+  constructor(private excelService: ExporterService) { }
 
   ngOnInit() {
   }
 
-  displayedColumns: string[] = ['position', 'name', 'weight', 'symbol'];
-  dataSource = new MatTableDataSource(ELEMENT_DATA);
+  exportAsXLSX() {
+    this.excelService.exportToExcel(this.dataSource.data, 'my_export');
+  }
+
+  exportAsXLSXFiltered() {
+    this.excelService.exportToExcel(this.dataSource.filteredData, 'my_export');
+  }
+
 
   applyFilter(filterValue: string) {
     this.dataSource.filter = filterValue.trim().toLowerCase();

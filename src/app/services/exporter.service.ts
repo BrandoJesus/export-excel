@@ -29,7 +29,6 @@ export class ExporterService {
 
     reader.onload = (e: any) => {
       const data = new Uint8Array(e.target.result);
-      // console.log('data ', data);
       const workbook: XLSX.WorkBook = XLSX.read(data, { type: 'array' });
       console.log('workbook ', workbook);
       /* DO SOMETHING WITH workbook HERE */

@@ -21,6 +21,27 @@ export class ExporterService {
     this.saveAsExcel(excelBuffer, excelFileName);
   }
 
+  readFileExcel(event?: any): any {
+    console.log('event ', event);
+    const files = event.target.files;
+    const file: File = files[0];
+    const reader: FileReader = new FileReader();
+
+    reader.onload = (e: any) => {
+      const data = new Uint8Array(e.target.result);
+      // console.log('data ', data);
+      const workbook: XLSX.WorkBook = XLSX.read(data, { type: 'array' });
+      console.log('workbook ', workbook);
+      /* DO SOMETHING WITH workbook HERE */
+      const worksheet: XLSX.WorkSheet = workbook.Sheets;
+      console.log('worksheet ', worksheet);
+
+      const json = XLSX.utils.sheet_to_json(worksheet.data);
+      console.log('json ', json);
+    };
+    reader.readAsArrayBuffer(file);
+  }
+
   private saveAsExcel(buffer: any, filename: string): void {
     const data: Blob = new Blob([buffer], {type: EXCEL_TYPE});
     FileSaver.saveAs(data, filename + '_export_' + new Date().getTime()  + EXCEL_EXT);

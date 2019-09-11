@@ -19,7 +19,7 @@ import { ExporterService } from './services/exporter.service';
   ],
   imports: [
     BrowserModule,
-    BrowserAnimationsModule,    
+    BrowserAnimationsModule,
     MatButtonModule,
     MatIconModule,
     MatInputModule,

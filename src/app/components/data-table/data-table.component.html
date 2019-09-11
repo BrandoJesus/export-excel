@@ -41,4 +41,15 @@
   <button mat-raised-button color="accent" (click)="exportAsXLSXFiltered()">
     <mat-icon>trending_down</mat-icon>Filtered
   </button>
+  <input
+    type="file"
+    id="inputImage"
+    accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
+    [hidden]="true"
+    (change)="fileOnChange($event)"
+  />
+  <button mat-raised-button color="dark">
+    <mat-icon>trending_down</mat-icon>
+    <label for="inputImage">Upload</label>
+  </button>
 </div>

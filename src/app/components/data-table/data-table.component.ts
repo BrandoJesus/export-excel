@@ -37,6 +37,7 @@ export class DataTableComponent implements OnInit {
   }
 
   exportAsXLSX() {
+    console.log('this.dataSource.data ', this.dataSource.data);
     this.excelService.exportToExcel(this.dataSource.data, 'my_export');
   }
 
@@ -49,4 +50,7 @@ export class DataTableComponent implements OnInit {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
+  fileOnChange(event?: any) {
+    this.excelService.readFileExcel(event);
+  }
 }

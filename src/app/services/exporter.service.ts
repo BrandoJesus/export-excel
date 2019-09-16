@@ -7,59 +7,64 @@ const EXCEL_EXT = '.xlsx';
 
 @Injectable()
 export class ExporterService {
+  rowInfo: XLSX.RowInfo[] = [];
+  colInfo: XLSX.ColInfo[] = [];
+  worksheet: XLSX.WorkSheet;
+  workbook: XLSX.WorkBook;
+  range: XLSX.Range;
+  excelBuffer: Buffer;
+  constructor() {}
 
-  constructor() { }
+  exportToExcel(json: any[], excelFileName: string, type?: string): void {
+    // console.log('json ', json, json.length);
+    this.colInfo = this.setColInfo(type);
+    this.worksheet = this.formatWorkSheet(json);
 
-  exportToExcel(json: any[], excelFileName: string): void {
-    const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(json);
-    worksheet['!margins'] = {left: 1.0, right: 1.0, top: 1.0, bottom: 1.0, header: 0.5, footer: 0.5};
-
-    const range: any = {
-      s: {
-        r: 0,
-        c: 0
-      },
-      e: {
-        r: json.length,
-        c: 15
-      }
-    };
-
-    for (let C = range.s.c; C < range.e.c; ++C) {
-      const cell = {c: C , r: 0};
-      // tslint:disable-next-line: variable-name
-      const cell_ref = XLSX.utils.encode_cell(cell);
-      // tslint:disable-next-line: variable-name
-      const cell_address = { t: 's', v: worksheet[cell_ref].v, s: {
-        font: {sz: 14, bold: true, color: '#000' }
-      }};
-      worksheet[cell_ref] = cell_address;
-    }
-
-    const rowInfo: XLSX.RowInfo[] = [];
-
-    for (let R = range.s.r; R <= range.e.r; ++R) {
-      rowInfo.push({ hpt: 20 });
-    }
-
-    const colInfo: XLSX.ColInfo[] = [
-      { width: 8 }, { width: 12 }, { width: 45 },
-      { width: 30 }, { width: 16 }, { width: 45 },
-      { width: 10 }, { width: 15 }, { width: 15 },
-      { width: 15 }, { width: 8 }, { width: 10 },
-      { width: 10 }, { width: 10 }, { width: 12 }
-    ];
-
-    worksheet['!cols'] = colInfo;
-    worksheet['!rows'] = rowInfo;
-
-    const workbook: XLSX.WorkBook = {
-      Sheets: { data: worksheet },
+    this.workbook = {
+      Sheets: { data: this.worksheet },
       SheetNames: ['data']
     };
-    const excelBuffer: any = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+    this.excelBuffer = XLSX.write(this.workbook, { bookType: 'xlsx', type: 'array' });
     // call method buffer and filename
-    this.saveAsExcel(excelBuffer, excelFileName);
+    this.saveAsExcel(this.excelBuffer, excelFileName);
+  }
+
+  formatWorkSheet(json: any) {
+    const ws = XLSX.utils.json_to_sheet(json);
+    const range: any = {
+      s: { r: 0, c: 0  },
+      e: { r: json.length, c: this.colInfo.length }
+    };
+
+    for (let R = range.s.r; R <= range.e.r; ++R) {
+      this.rowInfo.push({ hpt: 20 });
+    }
+
+    ws['!margins'] = {left: 1.0, right: 1.0, top: 1.0, bottom: 1.0, header: 0.5, footer: 0.5};
+    ws['!cols'] = this.colInfo;
+    ws['!rows'] = this.rowInfo;
+    return ws;
+  }
+
+  setColInfo(type: string) {
+    switch (type) {
+      case 'QUOTATION':
+        return this.colInfo = [
+          { width: 8 }, { width: 12 }, { width: 45 },
+          { width: 30 }, { width: 16 }, { width: 45 },
+          { width: 10 }, { width: 15 }, { width: 15 },
+          { width: 15 }, { width: 8 }, { width: 10 },
+          { width: 10 }, { width: 10 }, { width: 12 }
+        ];
+      default:
+        return this.colInfo = [
+          { width: 8 }, { width: 12 }, { width: 45 },
+          { width: 30 }, { width: 16 }, { width: 45 },
+          { width: 10 }, { width: 15 }, { width: 15 },
+          { width: 15 }, { width: 8 }, { width: 10 },
+          { width: 10 }, { width: 10 }, { width: 12 }
+        ];
+    }
   }
 
   readFileExcel(event?: any): any {

@@ -1,9 +1,9 @@
 <mat-form-field>
-  <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
+  <input matInput (keyup)="applyFilter($event.target.value)"
+   placeholder="Filter">
 </mat-form-field>
 
 <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
-
   <!-- Position Column -->
   <ng-container matColumnDef="position">
     <th mat-header-cell *matHeaderCellDef> No. </th>
@@ -31,9 +31,9 @@
   <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
   <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
 </table>
+
 <h3>Export as XLSX</h3>
 <div class="container">
-
   <button mat-raised-button color="primary" (click)="exportAsXLSX()">
     Export <mat-icon>trending_down</mat-icon>
   </button>

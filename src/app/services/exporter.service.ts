@@ -12,7 +12,7 @@ export class ExporterService {
   worksheet: XLSX.WorkSheet;
   workbook: XLSX.WorkBook;
   range: XLSX.Range;
-  excelBuffer: Buffer;
+  excelBuffer: any;
   constructor() {}
 
   exportToExcel(json: any[], excelFileName: string, type?: string): void {
